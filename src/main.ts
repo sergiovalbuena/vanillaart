@@ -28,10 +28,13 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
 setupCounter(document.querySelector<HTMLButtonElement>("#counter")!);
 
 // variables
-const imageContainer = document.getElementById("imageContainer");
-const imageElement = document.getElementById("myImage");
+const imageContainer = document.getElementById("imageContainer")!;
+const imageElement = document.getElementById("myImage") as HTMLImageElement;
 
-let scene, camera, renderer, planeMesh;
+let scene: THREE.Scene;
+let camera: THREE.PerspectiveCamera;
+let renderer: THREE.WebGLRenderer;
+let planeMesh: THREE.Mesh;
 let isHovered = false;
 let hoverDuration = 0;
 
@@ -81,7 +84,7 @@ const fragmentShader = `
 
 `;
 
-function initializeScene(texture) {
+function initializeScene(texture: THREE.Texture) {
   //   camera setup
   camera = new THREE.PerspectiveCamera(
     80,
@@ -95,12 +98,18 @@ function initializeScene(texture) {
   scene = new THREE.Scene();
 
   //   uniforms
-  const shaderUniforms = {
+  const shaderUniforms: ShaderUniforms = {
     tDiffuse: { value: texture },
     glitchIntensity: { value: 0.0 },
   };
 
   //   creating a plane mesh with materials
+  interface ShaderUniforms {
+    tDiffuse: { value: THREE.Texture };
+    glitchIntensity: { value: number };
+    [uniform: string]: { value: any };
+  }
+
   planeMesh = new THREE.Mesh(
     new THREE.PlaneGeometry(2, 2),
     new THREE.ShaderMaterial({
@@ -145,7 +154,9 @@ function animateScene() {
 
     if (hoverDuration >= 0.5) {
       hoverDuration = 0;
-      planeMesh.material.uniforms.glitchIntensity.value =
+      (
+        planeMesh.material as THREE.ShaderMaterial
+      ).uniforms.glitchIntensity.value =
         Math.random() * ANIMATION_CONFIG.glitchIntensityMod;
     }
   }
