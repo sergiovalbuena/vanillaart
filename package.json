@@ -15,6 +15,7 @@
   "dependencies": {
     "canvas-sketch": "^0.7.7",
     "canvas-sketch-util": "^1.10.0",
+    "three": "^0.162.0",
     "tweakpane": "^4.0.3"
   }
 }
