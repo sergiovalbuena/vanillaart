@@ -8,8 +8,12 @@ const settings = {
 let text = "S";
 let fontSize = 1200;
 let fontFamily = "Arial";
+let manager;
 
-const sketch = () => {
+const typeCanvas = document.createElement("canvas");
+const typeContext = typeCanvas.getContext("2d");
+
+const sketch = ({ context, width, height }) => {
   return ({ context, width, height }) => {
     context.fillStyle = "black";
     context.fillRect(0, 0, width, height);
@@ -41,6 +45,15 @@ const sketch = () => {
     context.restore();
   };
 };
-sketch();
 
-canvasSketch(sketch, settings);
+const onKeyUp = (e) => {
+  //console.log(e);
+  text = e.key.toUpperCase();
+  manager.render();
+};
+document.addEventListener("keyup", onKeyUp);
+
+const start = async () => {
+  manager = await canvasSketch(sketch, settings);
+};
+start();
