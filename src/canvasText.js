@@ -1,8 +1,9 @@
 import canvasSketch from "canvas-sketch";
+import { random } from "canvas-sketch-util";
 
 const settings = {
   dimensions: [1080, 1080],
-  animate: true,
+  animate: false,
 };
 
 let text = "S";
@@ -56,7 +57,13 @@ const sketch = ({ context, width, height }) => {
 
     const typeData = typeContext.getImageData(0, 0, cols, rows).data;
 
-    context.drawImage(typeCanvas, 0, 0);
+    //context.drawImage(typeCanvas, 0, 0);
+
+    context.fillStyle = "black";
+    context.fillRect(0, 0, width, height);
+
+    context.textBaseline = "middle";
+    context.textAlign = "center";
 
     //Find bitmaps in a grid
     for (let i = 0; i < numCells; i++) {
@@ -70,19 +77,39 @@ const sketch = ({ context, width, height }) => {
       const b = typeData[i * 4 + 2];
       const a = typeData[i * 4 + 3];
 
-      context.fillStyle = `rgb(${r},${g},${b})`;
+      const glyph = getGlyph(r);
+
+      context.font = `${cell * 1.6}px ${fontFamily}`;
+      if (Math.random() < 0.1) context.font = `${cell * 6}px ${fontFamily}`;
+
+      //context.fillStyle = `rgb(${r},${g},${b})`;
+      context.fillStyle = `white`;
 
       context.save();
       context.translate(x, y);
-
       //context.fillRect(0, 0, cell, cell);
-      context.beginPath();
-      context.arc(cell * 0.5, cell * 0.5, cell * 0.5, 0, Math.PI * 2);
-      context.fill();
+
+      // context.beginPath();
+      // context.arc(cell * 0.5, cell * 0.5, cell * 0.5, 0, Math.PI * 2);
+      // context.fill();
+
+      context.fillText(glyph, 0, 0);
 
       context.restore();
     }
   };
+};
+
+const getGlyph = (value) => {
+  if (value < 50) return " ";
+  if (value < 100) return ".";
+  if (value < 150) return "*";
+  if (value < 200) return "+";
+  if (value < 250) return "X";
+
+  const glyphs = "_=/".split("");
+  return random.pick(glyphs);
+  //return "#";
 };
 
 const onKeyUp = (e) => {
