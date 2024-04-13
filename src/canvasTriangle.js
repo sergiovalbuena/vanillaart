@@ -1,9 +1,9 @@
 import canvasSketch from "canvas-sketch";
-import { random, math, Color } from "canvas-sketch-util";
+import { random, math } from "canvas-sketch-util";
+import { Color } from "three";
 import risoColors from "riso-colors";
-//import { Color } from "three";
+import chroma from "chroma-js";
 
-//const seed = "599404";
 const seed = Date.now();
 
 const settings = {
@@ -11,7 +11,7 @@ const settings = {
   name: seed,
 };
 
-const sketch = ({ context, width, height }) => {
+const sketch = ({ width, height }) => {
   random.setSeed(seed);
 
   let x, y, w, h, fill, stroke, blend;
@@ -59,7 +59,7 @@ const sketch = ({ context, width, height }) => {
 
     rects.forEach((rect) => {
       const { x, y, w, h, fill, stroke, blend } = rect;
-      let shadowColor;
+      let shadowColor = chroma(fill).darken().alpha(0.5).css();
 
       context.save();
       context.translate(-mask.x, -mask.y);
@@ -73,10 +73,10 @@ const sketch = ({ context, width, height }) => {
 
       drawSkewedRect({ context, w, h, degrees });
 
-      shadowColor = Color.offsetHSL(fill, 0, 0, -20);
-      shadowColor.rgba[3] = 0.5;
+      // shadowColor = new Color(fill).offsetHSL(0, 0, -20);
+      // shadowColor = new Color(shadowColor).setOpacity(0.5);
 
-      context.shadowColor = Color.style(shadowColor.rgba);
+      context.shadowColor = shadowColor;
       context.shadowOffsetX = -10;
       context.shadowOffsetY = 20;
 
