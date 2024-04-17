@@ -127,3 +127,36 @@ canvas {
     background-color: #f9f9f9;
   }
 }
+
+
+#imageContainer2 {
+  position: relative;
+  width: 600px;
+  height: 800px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  max-width: 100%;
+  filter: saturate(50%);
+  transition: all ease 0.5s;
+}
+
+#imageContainer2:hover {
+  filter: saturate(100%)
+}
+
+
+#imageContainer2>* {
+  position: absolute;
+  inset: 0;
+  height: 100% !important;
+  width: 100% !important;
+  object-fit: cover;
+}
+
+
+
+
+
